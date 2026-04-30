@@ -19,7 +19,7 @@ import java.util.ArrayList;
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  *  @author Nick Smallbone
- *  @author You!
+ *  @author Michael Mukiibi
  */
 public class ScapegoatTree<Key extends Comparable<Key>, Value> {
     final double alpha = 2;        // how unbalanced the tree may become;
@@ -132,13 +132,25 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         // Read the lab instructions for more hints!
         if (cmp < 0) {
             // key is less than node.key
+            node.left = put(node.left, key, val);
         } else if (cmp > 0) {
             // key is greater than node.key
+            node.right = put(node.right, key, val);
         } else {
             // key is equal to node.key
+            node.val = val; // Key already exists, update value
         }
 
-        throw new UnsupportedOperationException();
+       // Maintain the size and height fields
+        node.size = 1 + size(node.left) + size(node.right);
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+
+        // Scapegoat condition: If the subtree is unbalanced, rebuild it!
+        if (node.height > alpha * log2(node.size)) {
+            node = rebuild(node);
+        }
+
+        return node; 
     }
 
     // Rebuild a tree to make it perfectly balanced.
@@ -155,9 +167,14 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
     // Perform an inorder traversal of the subtree rooted at 'node', storing
     // its nodes into the ArrayList 'nodes'.
     private void inorder(Node node, ArrayList<Node> nodes) {
-        // TO DO: use in-order traversal to store 'node' and all
-        // descendants into 'nodes' ArrayList
-        throw new UnsupportedOperationException();
+        // Use in-order traversal to store 'node' and all
+        // descendants into 'nodes' ArrayList.
+
+        if (node == null) return;
+        
+        inorder(node.left, nodes);  // Traverse left subtree
+        nodes.add(node);            // Add the current node
+        inorder(node.right, nodes); // Traverse right subtree
     }
 
     // Given an array of nodes, and two indexes 'lo' and 'hi',
@@ -175,6 +192,10 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         // The algorithm uses divide and conquer. Here is how it
         // should work.
         //
+
+        // The node at the midpoint becomes the root of this subtree
+        Node root = nodes.get(mid);
+
         // (1) Recursively call balanceNodes on two subarrays:
         //     (a) everything left of 'mid'
         //     (b) everything right of 'mid'
@@ -182,10 +203,19 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         //     which will be the root of the returned BST.
         // (3) Set the node's children to the BSTs returned by the
         //     two recursive calls you made in step (1).
+
+         // Recursively build the left and right subtrees
+        root.left = balanceNodes(nodes, lo, mid - 1);
+        root.right = balanceNodes(nodes, mid + 1, hi);
+
         // (4) Correctly set the 'size' and 'height' fields for the
         //      node.
-        // (5) Return the node!
-        throw new UnsupportedOperationException();
+
+        // Correctly set the 'size' and 'height' fields for the node
+        root.size = 1 + size(root.left) + size(root.right);
+        root.height = 1 + Math.max(height(root.left), height(root.right));
+
+        return root;
     }
 
     // Returns log base 2 of a number.

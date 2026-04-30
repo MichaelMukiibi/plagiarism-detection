@@ -81,18 +81,24 @@ Use a self-balancing binary search tree a Scapegoat tree, AVL tree or Red-black 
 **    Again, assume a total of N 5-grams, and a constant number of 5-grams
 **    that occur in more than one file.
 ******************************************************************************/
+buildIndex: Inserting $N$ items into the tree takes $O(N \log N)$ time.
 
-[...]
+findSimilarity: You iterate over the index. The assumption states there is a constant number of shared n-grams, 
+meaning the nested loops inside findSimilarity execute a constant $O(1)$ amount of times per n-gram.
+ Looking up/putting into the similarity tree takes $O(\log N)$. 
+ Thus, this phase also takes $O(N \log N)$.
 
+ The total time complexity for both phases combined is strictly $O(N \log N)$.
 
 /******************************************************************************
 ** 7 (optional). What if the total similarity score is an arbitrary number S,
 **               rather than a small constant?
 ******************************************************************************/
+ If there are $S$ similar file pairs discovered, the inner loop of findSimilarity will execute exactly $S$ times.
+ Inside that loop, you do a lookup/insertion into the similarity Scapegoat tree, which currently holds at most $S$ elements.
+ Therefore, the time spent building the similarity tree becomes $O(S \log S)$.
 
-[...]
-
-
+The new total complexity for the entire program becomes $O(N \log N + S \log S)$.
 
 /******************************************************************************
 ** Appendix: General information
@@ -127,8 +133,7 @@ NYANGOMA CHRISTINE: 100h
 /******************************************************************************
 ** D. Describe any serious problems you encountered.                    
 ******************************************************************************/
-
-[...]
+We had to correct the buildIndex method first before even compiling the lab.
 
 
 /******************************************************************************
@@ -137,5 +142,5 @@ NYANGOMA CHRISTINE: 100h
 **    from doing the assignment, and whether you enjoyed it.                                             
 ******************************************************************************/
 
-[...]
+Well cooked! It really exposed the real world difference between quadratic and logarithmic complexity!
 
