@@ -5,10 +5,12 @@
 ** Lab 3: Plagiarism detection
 *******************************************************************************/
 
-Name of lab group: [...]
-Group member A:    [...]
-Group member B:    [...]
-Group member C:    [...]
+Name of lab group: Group 3 Gamma
+MUKIIBI MICHAEL KIRINNYA: 100h
+ABAHO JOSHUA: 100h
+RWOTOMARA JOSHUA HOWARD:  100h
+OKORI SADRACH: 100h
+NYANGOMA CHRISTINE: 100h
 
 
 /******************************************************************************
@@ -19,8 +21,9 @@ Group member C:    [...]
 **    Assume that the number of 5-grams that occur in more than one file
 **    is a small constant - that is, there is not much plagiarised text.
 ******************************************************************************/
-
-[...]
+The brute-force method contains four nested loops: for path1, for path2, for ngram1, for ngram2.
+If $N$ is the total number of 5-grams across all files, this logic effectively compares every single 5-gram against every other 5-gram in the entire dataset.
+Therefore, the baseline complexity is $O(N^2)$. (Depending on how the BST is implemented, the put/contains methods might add an additional $O(\log N)$ factor, resulting in $O(N^2 \log N)$).
 
 
 /******************************************************************************
@@ -28,16 +31,29 @@ Group member C:    [...]
 **    Is the ratio between the times what you would expect, given the complexity?
 **    Explain very briefly why.
 *******************************************************************************/
+Small Time: 1.74s
+Medium Time: 315.93s
+Input Size Increase: $N_{medium} / N_{small} = 200,000 / 20,000 = 10$. The input is 10 times larger.
+Expected time increase: Because it is $O(N^2)$, the expected time should be $10^2 = 100$ times longer.
 
-[...]
-
+The theoretical ratio should be 100x because the input size increased by a factor of 10, and the algorithm is $O(N^2)$ ($10^2 = 100$).
+However, the actual ratio was closer to 182x approx 200x. 
+This happens because our $O(N^2)$ assumption relied on the amount of plagiarised text (shared n-grams) being a small constant.
+The medium dataset contains a higher density of plagiarised text than the small dataset, causing the innermost loops of the brute-force search to trigger and execute much more frequently,
+therefore drastically increasing the constant factor of the runtime.
 
 /******************************************************************************
 ** 3. How long do you predict the program would take to run on
 **    the 'huge' directory? Show your calculations.
 *******************************************************************************/
+ Input Ratio: $N_{huge} / N_{medium} = 4,000,000 / 200,000 = 20$.
+ The huge dataset is 20 times larger than the medium dataset.
 
-[...]
+Apply the Quadratic Complexity ($O(N^2)$):
+$20^2 = 400$.
+Therefore, the huge dataset should take roughly 400 times longer than the medium dataset.
+
+315.93 * 400  = 126,372s
 
 
 /******************************************************************************
@@ -45,15 +61,17 @@ Group member C:    [...]
 **
 ** 4. Which of the trees usually become unbalanced?
 ******************************************************************************/
-
-[...]
+ The files BST will become highly unbalanced. 
+ Inserting pre-sorted data into a standard Binary Search Tree causes it to degrade into a linked list, where every new node is added as a right child.
+ This turns your $O(\log N)$ lookups into $O(N)$ worst-case lookups.
 
 
 /******************************************************************************
 ** 5 (optional). Is there a simple way to stop these trees becoming unbalanced?
 ******************************************************************************/
+Randomize (shuffle) the paths array after reading it from the directory but before inserting it into the BST.
 
-[...]
+Use a self-balancing binary search tree a Scapegoat tree, AVL tree or Red-black tree.
 
 
 /******************************************************************************
@@ -82,9 +100,11 @@ Group member C:    [...]
 ** A. Approximately how many hours did you spend on the assignment?
 ******************************************************************************/
 
-[..group member..]:  [..hours..]
-[..group member..]:  [..hours..]
-[..group member..]:  [..hours..]
+MUKIIBI MICHAEL KIRINNYA: 100h
+ABAHO JOSHUA: 100h
+RWOTOMARA JOSHUA HOWARD:  100h
+OKORI SADRACH: 100h
+NYANGOMA CHRISTINE: 100h
 
 
 /******************************************************************************

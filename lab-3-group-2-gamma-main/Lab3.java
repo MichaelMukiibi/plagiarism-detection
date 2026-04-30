@@ -78,7 +78,7 @@ public class Lab3 {
         return files;
     }
 
-    // Phase 2: build index of n-grams (not implemented yet)
+    // Phase 2: build index of n-grams (Implemented)
     static BST<Ngram, ArrayList<Path>> buildIndex(BST<Path, Ngram[]> files) {
         BST<Ngram, ArrayList<Path>> index = new BST<>();
         // TO DO: build index of n-grams
