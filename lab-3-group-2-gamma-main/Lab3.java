@@ -86,7 +86,7 @@ public class Lab3 {
         for(Path p: files.keys()){
             for(Ngram gram: files.get(p))
                 if(index.contains(gram)){
-                    index.put(gram, (index.get(gram)).add(p));
+                    index.get(gram).add(p);
                 }
                 else{
                     ArrayList<Path> paths = new ArrayList<Path>();
