@@ -81,7 +81,7 @@ public class Lab3 {
     // Phase 2: build index of n-grams (Implemented)
     static BST<Ngram, ArrayList<Path>> buildIndex(BST<Path, Ngram[]> files) {
         BST<Ngram, ArrayList<Path>> index = new BST<>();
-        // TO DO: build index of n-grams
+        // Build index of n-grams
         
         for(Path p: files.keys()){
             for(Ngram gram: files.get(p))
@@ -99,26 +99,46 @@ public class Lab3 {
 
     // Phase 3: Count how many n-grams each pair of files has in common.
     static BST<PathPair, Integer> findSimilarity(BST<Path, Ngram[]> files, BST<Ngram, ArrayList<Path>> index) {
-        // TO DO: use index to make this loop much more efficient
+        // Use index to make this loop much more efficient
         // N.B. Path is Java's class for representing filenames
         // PathPair represents a pair of Paths (see PathPair.java)
-        BST<PathPair, Integer> similarity = new BST<>();
-        for (Path path1: files.keys()) {
-            for (Path path2: files.keys()) {
-                if (path1.equals(path2)) continue;
-                for (Ngram ngram1: files.get(path1)) {
-                    for (Ngram ngram2: files.get(path2)) {
-                        if (ngram1.equals(ngram2)) {
-                            PathPair pair = new PathPair(path1, path2);
-                            if (!similarity.contains(pair))
-                                similarity.put(pair, 0);
 
-                            similarity.put(pair, similarity.get(pair)+1);
-                        }
+        BST<PathPair, Integer> similarity = new BST<>();
+        
+        // Loop through all the unique n-grams in our newly built index
+        for (Ngram gram : index.keys()) {
+            ArrayList<Path> sharedPaths = index.get(gram);
+
+            // If an n-gram only appears in 1 file, it's not plagiarized. Skip it.
+            if (sharedPaths.size() < 2) {
+                continue;
+            }
+
+            // If it appears in multiple files, compare every possible pair of those files.
+            for (int i = 0; i < sharedPaths.size(); i++) {
+                for (int j = i + 1; j < sharedPaths.size(); j++) {
+                    Path p1 = sharedPaths.get(i);
+                    Path p2 = sharedPaths.get(j);
+
+                    // We must enforce a consistent order so we don't count (FileA, FileB) 
+                    // and (FileB, FileA) as two separate combinations.
+                    PathPair pair;
+                    if (p1.compareTo(p2) > 0) {
+                        pair = new PathPair(p1, p2);
+                    } else {
+                        pair = new PathPair(p2, p1);
+                    }
+
+                    // Increment the similarity score for this pair of files
+                    if (similarity.contains(pair)) {
+                        similarity.put(pair, similarity.get(pair) + 1);
+                    } else {
+                        similarity.put(pair, 1); // First time these files share an n-gram
                     }
                 }
             }
         }
+
 
         return similarity;
     }
